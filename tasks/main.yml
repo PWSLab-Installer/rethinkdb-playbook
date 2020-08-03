@@ -2,6 +2,8 @@
 
     -   name: Add repo of rethinkdb - Ubuntu
         shell: source /etc/lsb-release && echo "deb https://download.rethinkdb.com/repository/ubuntu-$DISTRIB_CODENAME $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rethinkdb.list
+        args:
+            executable: /bin/bash
         when: 
             - os_check.stdout | regex_search("Ubuntu")
 
