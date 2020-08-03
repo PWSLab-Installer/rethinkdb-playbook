@@ -1,7 +1,7 @@
 ---
 
     -   name: Add repo of rethinkdb - Ubuntu
-        shell: source /etc/lsb-release && echo "deb https://download.rethinkdb.com/repository/ubuntu-$DISTRIB_CODENAME $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+        shell: source /etc/lsb-release && echo "deb https://download.rethinkdb.com/repository/ubuntu-$DISTRIB_CODENAME $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rethinkdb.list
         when: 
             - os_check.stdout | regex_search("Ubuntu")
 
@@ -61,6 +61,6 @@
             dest: "/etc/rethinkdb/instances.d/instance1.conf"
 
     -   name: Restart RethinkDB
-        service:
+        systemd:
             name: rethinkdb
             state: restarted
