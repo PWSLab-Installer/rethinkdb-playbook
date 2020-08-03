@@ -10,7 +10,7 @@
       register: os_check
       ignore_errors: yes
 
-    - name: Fetch Invoice Ninja Role
+    - name: Fetch RethinkDB Role
       git:
         repo: https://ro:yA2wRPGevvSfrSCZLyT_@pwslab.org/ansible/rethinkdb-playbook.git
         dest: /root/.ansible/roles/pwslab.rethinkdb
