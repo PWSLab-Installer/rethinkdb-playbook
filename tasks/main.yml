@@ -1,0 +1,66 @@
+---
+
+    -   name: Add repo of rethinkdb - Ubuntu
+        shell: source /etc/lsb-release && echo "deb https://download.rethinkdb.com/repository/ubuntu-$DISTRIB_CODENAME $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+        when: 
+            - os_check.stdout | regex_search("Ubuntu")
+
+    -   name: Add repo of rethinkdb - CentOS 8
+        lineinfile:
+            path: /etc/yum.repos.d/rethinkdb.repo
+            line: "{{ item }}"
+            create: yes
+        loop:
+            - "[rethinkdb]"
+            - name=RethinkDB
+            - enabled=1
+            - baseurl=https://download.rethinkdb.com/repository/centos/8/x86_64/
+            - gpgkey=https://download.rethinkdb.com/repository/raw/pubkey.gpg
+            - gpgcheck=1
+        when: 
+            - os_check.stdout | regex_search("CentOS Linux 8")
+
+    -   name: Add repo of rethinkdb - CentOS 7
+        lineinfile:
+            path: /etc/yum.repos.d/rethinkdb.repo
+            line: "{{ item }}"
+            create: yes
+        loop:
+            - "[rethinkdb]"
+            - name=RethinkDB
+            - enabled=1
+            - baseurl=https://download.rethinkdb.com/repository/centos/7/x86_64/
+            - gpgkey=https://download.rethinkdb.com/repository/raw/pubkey.gpg
+            - gpgcheck=1
+        when: 
+            - os_check.stdout | regex_search("CentOS Linux 7")
+
+    -   name: Add key
+        shell: wget -qO- https://download.rethinkdb.com/repository/raw/pubkey.gpg | sudo apt-key add -
+        when: 
+            - os_check.stdout | regex_search("Ubuntu")
+
+    -   name: Install RethinkDB - Ubuntu
+        apt: 
+            name: rethinkdb
+            update_cache: yes
+            state: present
+        when: 
+            - os_check.stdout | regex_search("Ubuntu")
+
+    -   name: Install RethinkDB - CentOS
+        yum: 
+            name: rethinkdb
+            state: present
+        when: 
+            - os_check.stdout | regex_search("CentOS")
+
+    -   name: Set the new instance config file
+        template:
+            src: "instance1.conf.j2"
+            dest: "/etc/rethinkdb/instances.d/instance1.conf"
+
+    -   name: Restart RethinkDB
+        service:
+            name: rethinkdb
+            state: restarted

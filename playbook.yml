@@ -1,0 +1,23 @@
+- hosts: localhost
+  connection: local
+
+  vars:
+    
+  tasks:
+      
+    - name: Check the version of CentOS
+      command: hostnamectl
+      register: os_check
+      ignore_errors: yes
+
+    - name: Fetch Invoice Ninja Role
+      git:
+        repo: https://ro:yA2wRPGevvSfrSCZLyT_@pwslab.org/ansible/rethinkdb-playbook.git
+        dest: /root/.ansible/roles/pwslab.rethinkdb
+        version: master
+        force: yes
+
+    - name: Install RethinkDB
+      include_role:
+        name: pwslab.rethinkdb
+    
